@@ -1,0 +1,78 @@
+<!-- STARFIELD BACKGROUND -->
+<div class="starfield">
+  <div class="stars layer1"></div>
+  <div class="stars layer2"></div>
+  <div class="stars layer3"></div>
+</div>
+
+<div class="layout">
+  <!-- SOLAR SYSTEM SCENE -->
+  <div class="scene">
+
+    <!-- SUN -->
+    <div class="sun"></div>
+
+    <!-- ORBITS + PLANETS -->
+    <ng-container *ngFor="let p of planets; trackBy: trackByName">
+
+      <!-- ORBIT -->
+      <div class="orbit"
+           *ngIf="showOrbits"
+           [style.width.px]="p.orbitRadius * 2"
+           [style.height.px]="p.orbitRadius * 2"></div>
+
+      <!-- REVOLUTION GROUP -->
+      <div class="revolution"
+           [class.paused]="paused"
+           [style.width.px]="p.orbitRadius * 2"
+           [style.height.px]="p.orbitRadius * 2"
+           [style.animationDuration.s]="getOrbitDuration(p.orbitalPeriod)">
+
+        <!-- PLANET -->
+        <div class="planet"
+             [attr.data-planet]="p.name"
+             [style.width.px]="p.radius * 2"
+             [style.height.px]="p.radius * 2"
+             [style.background]="p.color"
+             [title]="p.name"></div>
+
+      </div>
+
+    </ng-container>
+  </div>
+
+  <!-- RIGHT SIDEBAR (Planet Info) -->
+  <aside class="legend">
+    <h2>Planets</h2>
+    <app-planet-card *ngFor="let p of planets" [planet]="p"></app-planet-card>
+  </aside>
+</div>
+
+
+<!-- DASHBOARD -->
+<aside class="dashboard">
+  <h2>Controls</h2>
+
+  <!-- SPEED SLIDER -->
+  <label>
+    Speed: {{ speedMultiplier }}x
+    <input type="range" min="0.1" max="5" step="0.1"
+           [(ngModel)]="speedMultiplier">
+  </label>
+
+  <!-- ORBIT VISIBILITY -->
+  <label>
+    <input type="checkbox" [(ngModel)]="showOrbits"> Show Orbits
+  </label>
+
+  <!-- PAUSE / RESUME -->
+  <button (click)="togglePause()">
+    {{ paused ? 'Resume' : 'Pause' }}
+  </button>
+
+  <!-- SCALE TOGGLE -->
+  <button (click)="toggleScale()">
+    Scale: {{ scaleMode }}
+  </button>
+
+</aside>

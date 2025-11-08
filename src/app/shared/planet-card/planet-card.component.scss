@@ -1,0 +1,8 @@
+.planet-card {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .35rem .6rem; border: 1px solid #e6e6e6; border-radius: .5rem;
+  background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  .color { width: .9rem; height: .9rem; border-radius: 50%; }
+  .info { display: grid; line-height: 1.1; }
+  small { color: #666; }
+}
