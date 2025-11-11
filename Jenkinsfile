@@ -13,6 +13,10 @@ pipeline {
 
         stage('Checkout Source Code') {
             steps {
+                sh """
+                    git config --global user.email "eng.shnabil@gmail.com"
+                    git config --global user.name "Jenkins GitOps Bot"
+                """
                 checkout scm
             }
         }
