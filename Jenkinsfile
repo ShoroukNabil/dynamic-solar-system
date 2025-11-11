@@ -46,7 +46,7 @@ pipeline {
         stage('Clone ArgoCD Repo') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'git-creds', 
+                    withCredentials([usernamePassword(credentialsId: 'git-creds-username', 
                         usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
 
                        sh """
