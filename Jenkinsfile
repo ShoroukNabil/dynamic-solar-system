@@ -35,9 +35,9 @@ pipeline {
                         usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
 
                         sh """
-                            echo "$DOCKER_PASS" | docker login ${IMAGE_NAME%/*} -u "$DOCKER_USER" --password-stdin
-                            docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                        """
+    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                """
                     }
                 }
             }
@@ -49,10 +49,11 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'git-creds', 
                         usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
 
-                        sh """
+                       sh """
                             rm -rf ${ARGO_REPO_DIR}
-                            git clone https://${GIT_USER}:${GIT_PASS}@${ARGO_REPO_URL#*@} ${ARGO_REPO_DIR}
+                            git clone https://${GIT_USER}:${GIT_PASS}@github.com/ShoroukNabil/argocd-dynamic-solar-system.git ${ARGO_REPO_DIR}
                         """
+
                     }
                 }
             }
@@ -80,13 +81,16 @@ pipeline {
 
                         sh """
                             cd ${ARGO_REPO_DIR}
-                            git config user.email "gitops-bot@jenkins"
-                            git config user.name "Jenkins GitOps Bot"
-
-
+                            sed -i 's#image: .*#image: ${IMAGE_NAME}:${IMAGE_TAG}#g' ${MANIFEST_PATH}
+                            
+                            if git diff --quiet; then
+                                echo "No changes to commit"
+                                exit 0
+                            fi
+                            
                             git add .
                             git commit -m "Update image tag to ${IMAGE_TAG}"
-                            git push https://${GIT_USER}:${GIT_PASS}@${ARGO_REPO_URL#*@} HEAD:main
+                            git push https://${GIT_USER}:${GIT_PASS}@github.com/ShoroukNabil/argocd-dynamic-solar-system.git HEAD:main
                         """
                     }
                 }
